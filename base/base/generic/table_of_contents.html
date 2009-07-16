@@ -1,0 +1,53 @@
+{{
+
+<r3:include path="data_table_of_contents.perl" />
+
+  if ( defined $table_of_contents ) {
+      my $previous_depth = 1;
+      my $output         = "<ol id='table-contents'>\n";
+      
+      foreach my $path ( @{ $table_of_contents } ) {
+          my @path_parts = split m{/}, $path;
+          my $depth      = $#path_parts;
+          my $metadata   = $flourish->get_metadata_for( $path );
+          my $title      = $metadata->{'title'};
+          my $subtitle   = $metadata->{'subtitle'};
+          my $text;
+        
+          while ( $depth > $previous_depth ) {
+              $output .= "<ol>\n";
+              $previous_depth++;
+          }
+          while ( $depth < $previous_depth ) {
+              $output .= "</ol>\n";
+              $previous_depth--;
+          }
+        
+          if ( defined $title ) {
+              $text = "<a href='${path}'>$title</a>";
+              if ( defined $subtitle ) {
+                  $text = "<span>${text} &mdash; ${subtitle}</span>";
+              }
+          }
+          else {
+              # take the last part of the theoretically SEO friendly 
+              # URL and turn it back into useful text
+              $text = pop @path_parts;
+              $text =~ s{-}{ }g;
+              $text =~ s{(\w+)}{\u\L$1}g;                    
+          }
+        
+          $output .= "<li>$text</li>\n";
+      }
+    
+      # close the remaining <ol>s
+      while ( 0 < $previous_depth ) {
+          $output .= "</ol>\n";
+          $previous_depth--;
+      }
+    
+      return $output;
+  }
+
+    undef;
+}}
