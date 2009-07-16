@@ -1,0 +1,19 @@
+$HTTP["host"] == "<r3:domvar>site</r3:domvar><r3:domvar>development</r3:domvar>" {
+    
+    var.site-base      = var.htdocs-root + "<r3:domvar>site</r3:domvar>/"
+    var.site-root      = var.site-base + "site/"
+    var.content-root   = var.site-base + "content/"
+    var.config-root    = var.site-base + "config/"
+    var.templates-root = var.site-base + "templates/"
+    
+    server.document-root            = var.site-root
+    magnet.attract-physical-path-to = ( var.config-root + "rewrite.lua" )
+    
+    fastcgi.server = (
+        "/flourish.fcgi" => ( (
+            "bin-path"  => var.config-root + "flourish.fcgi",
+            "socket"    => var.config-root + "socket",
+            "max-procs" => 5,
+        ) )
+    )
+}

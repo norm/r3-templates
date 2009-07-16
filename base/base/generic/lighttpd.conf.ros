@@ -1,0 +1,7 @@
+$HTTP["host"] == "<r3:domvar>site</r3:domvar><r3:domvar>development</r3:domvar>" {
+    
+    var.site-base = var.htdocs-root + "<r3:domvar>site</r3:domvar>/"
+    var.site-root = var.site-base + "site/"
+    
+    server.document-root = var.site-root
+}
