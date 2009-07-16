@@ -1,0 +1,9 @@
+<title>{{ 
+    if ( 'Homepage' ne $title ) {
+        $title .= "&mdash; Using r3";
+    }
+    else {
+        $title = "Using r3";
+    }
+    return $title;
+}}</title>
