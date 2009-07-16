@@ -1,0 +1,66 @@
+<ul>
+{{
+    use Data::Dumper;
+    
+    my $list;
+    foreach my $article ( @content ) {
+        my $url      = $article->{'key'};
+        my $title    = $article->{'title'};
+        my $time     = convert_timestamp( $article->{'timestamp'}, 'data' );
+        my $subtitle = $article->{'subtitle'};
+        my $summary  = $article->{'summary'} // '';
+        
+        if ( $summary ) {
+            $summary = "<blockquote cite='${url}'>$summary</blockquote>";
+        }
+        
+        $list .= <<HTML
+            <li>
+                <h3><a href='${url}'>${title}</a></h3>
+                <p class='datetime'>${time}</p>
+                <p class='subtitle'>${subtitle}</p>
+                ${summary}
+            </li>
+HTML
+    }
+    
+    return $list;
+#     $article = $content[0];
+#     
+#     my $subtitle = $article->{'subtitle'} // q();
+#     if ( $subtitle ) {
+#         $subtitle = "<h2 class='subtitle'>${subtitle}</h2>";
+#     }
+#     
+#     return <<HTML;
+#         <h1>$article->{'title'}</h1>
+#         $subtitle
+#         $article->{'content'}
+# HTML
+
+}}
+</ul>
+
+
+<r3:comment>
+    <div id='content'>
+    <ul>
+                <li>
+                    <h3><a href='/about/usingr3/'>About “using R3”</a></h3>
+                    <p class='datetime'>Sat, September 13, 2008 <span>19:11</span></p>
+                    <p class='subtitle'>A quick explanation as to what this site is about, 
+    and what you can expect to get from it.</p>
+                
+                    <blockquote cite='/about/usingr3/'></blockquote>
+                </li>
+                <li>
+                    <h3><a href='/about/r3/'>About r3</a></h3>
+                    <p class='datetime'>Sat, September 13, 2008 <span>18:32</span></p>
+                    <p class='subtitle'>A short explanation of what r3 is, and why it is useful.</p>
+                
+                    <blockquote cite='/about/r3/'></blockquote>
+                </li>
+    </ul>
+    </div>
+
+</r3:comment>

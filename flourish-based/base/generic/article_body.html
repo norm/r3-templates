@@ -1,0 +1,15 @@
+{{
+    $article = $content[0];
+    
+    my $subtitle = $article->{'subtitle'} // q();
+    if ( $subtitle ) {
+        $subtitle = "<h2 class='subtitle'>${subtitle}</h2>";
+    }
+    
+    return <<HTML;
+        <h1>$article->{'title'}</h1>
+        $subtitle
+        $article->{'content'}
+HTML
+
+}}

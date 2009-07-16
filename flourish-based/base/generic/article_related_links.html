@@ -1,0 +1,26 @@
+{{
+    my $links = $article->{'related'};
+    my $links_header = 'Related articles';
+    
+    foreach my $link ( @{ $links } ) {
+        my $metadata = $flourish->get_metadata_for( $link );
+
+        my $url   = $link;
+        my $text  = $metadata->{'title'};
+
+        if ( defined $url  &&  defined $text ) {
+            $list .= "<li><em><a href='${url}'>${text}</a></em></li>";
+        }
+
+        if ( length $list > 0 ) {
+            return <<HTML;
+                <h2>${links_header}</h2>
+                <ul class='links'>
+                ${list}
+                </ul>
+HTML
+        }
+    }
+
+    undef;
+}}
