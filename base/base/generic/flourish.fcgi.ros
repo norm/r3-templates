@@ -1,0 +1,54 @@
+#!/ports/bin/perl
+
+use Modern::Perl;
+
+use FCGI;
+use Flourish;
+use Readonly;
+
+Readonly my $SITE_DIRECTORY => '<r3:domvar>htdocs-base</r3:domvar>'
+                             . '/<r3:domvar>site</r3:domvar>';
+
+
+                             
+my $request  = FCGI::Request();
+my $flourish = Flourish->new(
+        cache_file    => "${SITE_DIRECTORY}/config/cache.mmap",
+        cache_expire  => ( 60 * 60 * 24 ),       # 1 day
+        cache_unlink  => 0,
+        content_root  => "${SITE_DIRECTORY}/content",
+        template_root => "${SITE_DIRECTORY}/templates",
+    );
+my $headers;
+my $output;
+
+
+
+# run from FastCGI...
+if ( $request->IsFastCGI() ) {
+    while ( $request->Accept() >= 0 ) {
+        my $path              = $ENV{'PATH_INFO'};
+        ( $headers, $output ) = $flourish->handle_request( path => $path );
+
+        print $headers . $output;
+    }
+    exit;
+}
+
+# ...or run from command line
+$flourish->add_trigger( 'debug', \&debug );
+$flourish->add_trigger( 'error', \&debug );
+my $path = shift() // '/';
+
+( $headers, $output ) = $flourish->handle_request( path => $path );
+print $headers . $output;
+exit;
+
+
+
+sub debug {
+    my $self = shift;
+    my $text = shift;
+    
+    say "-> $text";
+}
