@@ -1,0 +1,14 @@
+-- pass everything through flourish.fcgi
+
+attr = lighty.stat( lighty.env["physical.path"] )
+
+if ( not attr or attr["is_dir"] ) then
+    -- file does not exist, or is a directory
+    
+    lighty.env["uri.path"]      = "/flourish.fcgi" 
+                               .. lighty.env["uri.path"] 
+    
+    lighty.env["physical.path"] = lighty.env["physical.doc-root"] 
+                               .. lighty.env["uri.path"]
+    
+end
